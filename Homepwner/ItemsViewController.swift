@@ -23,6 +23,10 @@ class ItemsViewController: UITableViewController {
         tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 65
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
     // MARK:- TableView Delegate+DataSource
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -84,6 +88,19 @@ class ItemsViewController: UITableViewController {
         } else {
             _sender.setTitle("Done", for: .normal)
             setEditing(true, animated: true)
+        }
+    }
+    // MARK:- Segue
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        switch segue.identifier {
+        case "showItem"?:
+            if let row = tableView.indexPathForSelectedRow?.row {
+                let item = itemStore.allItems[row]
+                let detailViewController = segue.destination as! DetailViewController
+                detailViewController.item = item
+            }
+        default:
+            preconditionFailure("Unexpected segue identifier")
         }
     }
 }
